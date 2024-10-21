@@ -24,12 +24,12 @@ type FormState = {
 export async function setUserAdress(
   prevState: FormState | null,
   FormData: FormData
-): Promise<FormState|never> {
+): Promise<FormState | never> {
   const firstname = FormData.get("firstname") as string;
   const lastname = FormData.get("lastname") as string;
   const number = FormData.get("number") as string;
   const password = FormData.get("password") as string;
-  const hashpassword =await bcrypt.hash(password , 10)
+  const hashpassword = await bcrypt.hash(password, 10);
   try {
     const usercreate = await prisma.user.create({
       data: {
@@ -40,7 +40,7 @@ export async function setUserAdress(
     });
     if (usercreate) {
       revalidatePath("/signup");
-      return {sucess: true}
+      return { sucess: true };
     } else {
       return { error: "Data not submitted" };
     }
