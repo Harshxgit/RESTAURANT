@@ -74,8 +74,7 @@ model Reservation {
   user      User              @relation(fields: [userId], references: [id])
   date      DateTime
   time       String
-  startTime String
-  endTime   String
+  partysize String
   status    ReservationStatus
   createdAt DateTime          @default(now())
   updatedAt DateTime?         @updatedAt
@@ -97,6 +96,7 @@ enum ReservationStatus {
   PENDING
   CONFIRMED
   CANCELLED
+  ARCHIVED
 }
 
 enum OrderStatus {
