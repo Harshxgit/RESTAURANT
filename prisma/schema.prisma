@@ -55,17 +55,15 @@ model MenuItem {
   category    String
   createdAt   DateTime    @default(now())
   updatedAt   DateTime?   @updatedAt
-  oderItems   OrderItem[]
 }
 
 model OrderItem {
   id         Int      @id @default(autoincrement())
   orderId    Int
   Order      Order?   @relation(fields: [orderId], references: [id])
-  menuitemId Int
-  MenuItem   MenuItem @relation(fields: [menuitemId], references: [id])
-  quantity   Int
+  quantity   Int?
   price      Float
+  menuitem   Json[]
 }
 
 model Reservation {
