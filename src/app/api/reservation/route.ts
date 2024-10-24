@@ -1,26 +1,33 @@
 import prisma from "@/db";
-import cron from 'node-cron';
+import cron from "node-cron";
 //resete function for reset all table for tomorrow leaving this reserver table
-interface reservation {
-  userid : string
-  username  : string
 
+interface orderItem {}
+interface order {
+  userid: string;
+}
+interface reservationtype {
+  userid: string;
+  username: string;
+  tableid: string;
+  partysize: string;
 }
 
-// export async function reserveNow(userid :string ,Date:string ,time:string ,partysize:string ){
-//     try{
-
-//         const isreserve=  prisma.$transaction((tx)=>{
-//             tx.reservation.create({
-
-//             })
-//         })
-//     } catch(e){
-//             throw new Error("failed to reserve")
-//     }
-
+// export async function reserveNow(
+//   userid: string,
+//   Date: string,
+//   time: string,
+//   partysize: string,
+//   tableid: string
+// ) {
+//   try {
+//     const isreserve = prisma.$transaction((tx) => {
+//       tx.reservation.create({});
+//     });
+//   } catch (e) {
+//     throw new Error("failed to reserve");
+//   }
 // }
-
 
 const getDate = () => {
   const now = new Date();
@@ -31,7 +38,6 @@ const getDate = () => {
   startTomorrow.setHours(0, 0, 0, 0);
   return { startofDay, endofDay, startTomorrow };
 };
-
 
 //automatice reset function
 export async function resetfunction() {
@@ -58,37 +64,37 @@ export async function resetfunction() {
 
     //reset all tables to available
     tx.table.updateMany({
-       data:{
-        isAvailable:true
-       } 
-    })
+      data: {
+        isAvailable: true,
+      },
+    });
 
     //reset again make false for tomorrow table
-    for(const reservation of tomorrowReservation){
-        tx.table.update({
-            where: {
-                id: reservation.TableId
-            },
-            data:{
-                isAvailable : false
-            }
-        })
+    for (const reservation of tomorrowReservation) {
+      tx.table.update({
+        where: {
+          id: reservation.TableId,
+        },
+        data: {
+          isAvailable: false,
+        },
+      });
     }
     //archeive all today reservation
     tx.reservation.updateMany({
-        where:{
-            date:{
-                gte:startofDay,
-                lte:endofDay
-            },
-            status:{
-                in:['PENDING','CONFIRMED']
-            },
+      where: {
+        date: {
+          gte: startofDay,
+          lte: endofDay,
         },
-        data:{
-            status:'ARCHIVED'
-        }
-    })
+        status: {
+          in: ["PENDING", "CONFIRMED"],
+        },
+      },
+      data: {
+        status: "ARCHIVED",
+      },
+    });
   });
 }
 
@@ -136,10 +142,21 @@ export async function getAlltable(inputDate: string | Date) {
     });
     return availabilty;
   } catch (e) {
-    throw new Error("message")
+    throw new Error("message");
   }
 }
 
+//check availabel condition using checking condition
+export function checkavailability(
+  getAlltable: any,
+  slot: string,
+  tableid: string
+) {
+  const getslots = getAlltable[`${slot}`];
+  getslots.some((r: any) => r.tableid === tableid);
+}
+
+//genrate slots
 export function genrateslots() {
   const slots = [];
   const starthrs = 10;
@@ -149,7 +166,9 @@ export function genrateslots() {
   }
   return slots;
 }
-cron.schedule('0 0 * * *', async () => {
-    console.log('Running scheduled table reset...');
-    await resetfunction();
+
+//automatic reset the tale for tomorrow
+cron.schedule("0 0 * * *", async () => {
+  console.log("Running scheduled table reset...");
+  await resetfunction();
 });

@@ -36,15 +36,15 @@ model Address {
 }
 
 model Order {
-  id          Int          @id @default(autoincrement())
-  userId      Int
-  user        User         @relation(fields: [userId], references: [id])
-  status      OrderStatus
-  total       Float
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime?    @updatedAt
-  item        OrderItem[]
-  Reservation Reservation?
+  id           Int           @id @default(autoincrement())
+  userId       Int
+  user         User          @relation(fields: [userId], references: [id])
+  status       OrderStatus?
+  total        Float
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime?     @updatedAt
+  item         OrderItem[]
+  reservations Reservation[]
 }
 
 model MenuItem {
@@ -73,15 +73,15 @@ model Reservation {
   userId    Int
   user      User              @relation(fields: [userId], references: [id])
   date      DateTime
-  time       String
+  time      String
   partysize String
   status    ReservationStatus
   createdAt DateTime          @default(now())
   updatedAt DateTime?         @updatedAt
   TableId   Int
   table     Table             @relation(fields: [TableId], references: [id])
-  Order     Order?            @relation(fields: [orderId], references: [id])
   orderId   Int?              @unique
+  Order     Order?            @relation(fields: [orderId], references: [id])
 }
 
 model Table {
