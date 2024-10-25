@@ -1,4 +1,4 @@
-import { addMenu, getMenu } from "@/app/actions/addMenu";
+import { addMenu, getMenu } from "@/app/actions/menu/addMenu";
 import prisma from "@/db";
 import { NextApiRequest, NextApiResponse } from "next";
 

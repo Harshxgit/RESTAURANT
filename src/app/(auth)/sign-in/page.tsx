@@ -7,7 +7,7 @@ import { signIn, signOut } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { Turnstile } from "@marsidev/react-turnstile";
-import { findUser } from "@/app/actions/userDetails";
+import { findUser } from "@/app/actions/user/userDetails";
 import { sendOTP, verifyOtp } from "@/app/actions/otp";
 const schema = z.object({
   phone: z.string().refine(validator.isMobilePhone),

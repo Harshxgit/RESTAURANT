@@ -11,7 +11,7 @@ import {
   IconBrandOnlyfans,
 } from "@tabler/icons-react";
 import { sendOTP, verifyOtp } from "@/app/actions/otp";
-import { findUser, setUserAdress } from "@/app/actions/userDetails";
+import { findUser, setUserAdress } from "@/app/actions/user/userDetails";
 import { useRouter } from "next/navigation";
 
 export default function SignupFormDemo() {

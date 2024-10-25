@@ -1,4 +1,4 @@
-import { addMenu, getMenu } from "@/app/actions/addMenu";
+import { addMenu, getMenu } from "@/app/actions/menu/addMenu";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export async function handler(req: NextApiRequest, res: NextApiResponse) {

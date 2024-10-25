@@ -73,7 +73,7 @@ model Reservation {
   date      DateTime
   time      String
   partysize String
-  status    ReservationStatus
+  status    ReservationStatus?
   createdAt DateTime          @default(now())
   updatedAt DateTime?         @updatedAt
   TableId   Int
