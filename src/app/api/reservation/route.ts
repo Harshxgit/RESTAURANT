@@ -99,12 +99,9 @@ export async function resetfunction() {
 }
 
 //get all table on a given date which are available or which are not
-export async function getAlltable(inputDate: string | Date) {
+export async function getAlltable(inputDate: string) {
   try {
-    const requestedDate =
-      typeof inputDate === "string" ? new Date(inputDate) : Date;
-    //check if requestedDate is a Date instance , then use setHours
-
+    const requestedDate = new Date(inputDate);
     const startofDay = new Date((requestedDate as Date).setHours(0, 0, 0, 0));
     const endofDay = new Date(
       (requestedDate as Date).setHours(23, 59, 59, 999)
@@ -147,13 +144,14 @@ export async function getAlltable(inputDate: string | Date) {
 }
 
 //check availabel condition using checking condition
-export function checkavailability(
+export async function checkavailability(
   getAlltable: any,
   slot: string,
   tableid: string
 ) {
   const getslots = getAlltable[`${slot}`];
   getslots.some((r: any) => r.tableid === tableid);
+  return getslots;
 }
 
 //genrate slots
