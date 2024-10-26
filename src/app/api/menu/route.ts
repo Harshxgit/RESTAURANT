@@ -4,7 +4,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 export async function GET() {
   try {
-  
     const data = await getMenu();
     if (!data) return Response.json({ error: "menu data not found" });
     return Response.json(data);
@@ -20,7 +19,7 @@ export async function POST(req: Request) {
   try {
     const insertdata = await addMenu(name, price, description, category);
     if (!insertdata) return Response.json({ error: "data not found" });
-    return Response.json({ message: "data inserted" });
+    return Response.json({ message: "Menu Item Added" });
   } catch (e) {
     return Response.json({ error: "failed" });
   }

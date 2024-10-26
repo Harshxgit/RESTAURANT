@@ -1,4 +1,5 @@
-import { getAlltable } from "@/app/actions/reservation/reservation";
+// import { getAlltable } from "@/app/actions/reservation/reservation";
+import { insertTable } from "@/app/actions/table/table";
 import prisma from "@/db";
 
 //i wrote the check table function , bcz its repeate more than one
@@ -19,16 +20,12 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  console.log("first")
   const { tablenumber, capacity, isAvailabel } = await req.json();
+  console.log(tablenumber,capacity)
   const checkexist = await checkexistatble(tablenumber);
   if(checkexist) return Response.json({"message":"table existed"})
-  const puttable = await prisma.table.create({
-    data: {
-      tablenumber: tablenumber,
-      capacity: capacity,
-      isAvailable: isAvailabel,
-    },
-  });
+  const puttable = await insertTable(tablenumber,capacity,isAvailabel)
   if (!puttable) return Response.json({ message: "failed to insert data" });
   return Response.json({ message: "table inserted" });
 }

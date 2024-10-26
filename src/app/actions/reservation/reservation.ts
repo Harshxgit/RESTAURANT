@@ -2,17 +2,6 @@ import prisma from "@/db";
 import cron from "node-cron";
 //resete function for reset all table for tomorrow leaving this reserver table
 
-interface orderItem {}
-interface order {
-  userid: string;
-}
-interface reservationtype {
-  userid: string;
-  username: string;
-  tableid: string;
-  partysize: string;
-}
-
 //main reservation function
 export async function reserveNow(
   userid: number,
