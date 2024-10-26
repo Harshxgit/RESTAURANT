@@ -2,8 +2,9 @@ import { addMenu, getMenu } from "@/app/actions/menu/addMenu";
 import prisma from "@/db";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
+  
     const data = await getMenu();
     if (!data) return Response.json({ error: "menu data not found" });
     return Response.json(data);

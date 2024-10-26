@@ -1,8 +1,8 @@
 import { getAlltable } from "@/app/actions/reservation/reservation";
 import prisma from "@/db";
 
-//i wrote the check table function , bcz its repeate more than one  
-const checkexistatble = async(tablenumber:number) => {
+//i wrote the check table function , bcz its repeate more than one
+const checkexistatble = async (tablenumber: number) => {
   const isexisttable = await prisma.table.findUnique({
     where: {
       tablenumber: tablenumber,
@@ -11,21 +11,17 @@ const checkexistatble = async(tablenumber:number) => {
   if (isexisttable) return Response.json({ message: "table exist" });
 };
 
-//get all today reserve tabel . its for websocket
-// export async function GET(req: Request) {
-//   const { date } = await req.json();
-//   const getalltable = await getAlltable(date);
-//   return Response.json(getalltable);
-// }
-export async function GET() {
-  
-  const allTabel = await prisma.table.findMany();
-  return Response.json(allTabel)
 
+
+export async function GET() {
+  const allTabel = await prisma.table.findMany();
+  return Response.json(allTabel);
 }
+
 export async function POST(req: Request) {
   const { tablenumber, capacity, isAvailabel } = await req.json();
-
+  const checkexist = await checkexistatble(tablenumber);
+  if(checkexist) return Response.json({"message":"table existed"})
   const puttable = await prisma.table.create({
     data: {
       tablenumber: tablenumber,
@@ -44,4 +40,21 @@ export async function DELETE(req: Request) {
       id: tableid,
     },
   });
+  if(!deleteTabel) return Response.json({"message":"table not deleted"})
+  return Response.json({"message":"table deleted"})
+}
+
+export async function PUT(req:Request){
+  const {tableid,tablenumber,capacity,isAvailabel} = await req.json();
+  const updatetbale = await prisma.table.update({
+    where:{
+        id:tableid
+    },
+    data:{
+        capacity:capacity,
+        isAvailable:isAvailabel,
+    }
+  })
+  if(!updatetbale) return Response.json({"message":"table not updated"})
+  return Response.json({"message":"table updated"})
 }
