@@ -13,7 +13,7 @@ export async function addMenu(
       name: MenuName,
     },
   });
-  if (name) return { message: "this is existed" };
+  if (name) return { "message": "this item is existed" };
   try {
     const data = await prisma.menuItem.create({
       data: {
@@ -23,7 +23,7 @@ export async function addMenu(
         category: category,
       },
     });
-    if (data) return { message: "Menu added" };
+    if (data) return { "message": "Menu added" };
   } catch (error) {
     console.error(error);
   }
@@ -63,7 +63,7 @@ export async function updateMenu(
         category: category,
       },
     });
-    if (update) return { message: "menu updated" };
+    if (update) return { "message": "menu updated" };
   } catch (error) {
     console.log(error);
   }
@@ -73,7 +73,7 @@ export async function deleteMenu(id: number) {
     const deleteMenu = await prisma.menuItem.delete({
       where: { id: id },
     });
-    if (deleteMenu) return { message: "menu deleted sucessfully" };
+    if (deleteMenu) return { "message": "menu deleted sucessfully" };
   } catch (e) {
     console.log(e);
   }

@@ -38,7 +38,8 @@ export async function order(
         },
       });
     });
-    
+    if(!isorderd) return {"message":"failed to order not placed"}
+     return {"message":"order placed"}
   } catch (e) {
     throw new Error("order not placed")
   }

@@ -50,6 +50,7 @@ export async function PUT(req:Request){
     data:{
         capacity:capacity,
         isAvailable:isAvailabel,
+        tablenumber : tablenumber
     }
   })
   if(!updatetbale) return Response.json({"message":"table not updated"})
