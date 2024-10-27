@@ -4,12 +4,11 @@ import prisma from "@/db";
 
 export async function order(
   userid: number,
-  date: string,
   partysize: string,
   price: number,
-  menuitem: { menuItemid: string; manuItemname: string; menuitemqty: string }[],
+  menuitem: { menuItemid: string; menuItemname: string; menuitemqty: string }[],
   totalmenuquantity: number,
-  slot: string
+
 ) {
  
   try {
@@ -17,14 +16,14 @@ export async function order(
       const order = await tx.order.create({
         data: {
           userId: userid,
-          total: partysize,
-        },
+          total: partysize
+        }
       });
       const orderid = order.id;
       const menuitems = menuitem.map((item) => {
         return {
           menuitmeid: item.menuItemid,
-          manuItemname: item.manuItemname,
+          manuItemname: item.menuItemname,
           menuitemqty: item.menuitemqty,
         };
       });
