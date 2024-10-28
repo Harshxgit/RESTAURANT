@@ -1,5 +1,5 @@
 import prisma from "@/db";
-import cron from "node-cron";
+// import cron from "node-cron";
 //resete function for reset all table for tomorrow leaving this reserver table
 
 //main reservation function
@@ -9,12 +9,11 @@ export async function reserveNow(
   time: string,
   partysize: string,
   tableid: number,
-  slot: string
-) {
+ ) {
   try {
-    const gettabledata = await getAlltable(date);
-    const isAvailable = await checkavailability(gettabledata, slot, date);
-    if (!isAvailable) throw new Error("tabel unavailabel");
+    // const gettabledata = await getAlltable(date);
+    // const isAvailable = await checkavailability(gettabledata, time, date);
+    // if (!isAvailable) throw new Error("tabel unavailabel");
     const isreserve = prisma.$transaction(async (tx) => {
       await tx.reservation.create({
         data: {
@@ -26,7 +25,8 @@ export async function reserveNow(
         },
       });
     });
-    if (!isreserve) throw new Error("failde to reservation");
+    if (!isreserve) return Response.json({"message":"failed to reserve"})
+    return Response.json({"message":"table reserved"})
   } catch (e) {
     throw new Error("failed to reserve");
   }
@@ -47,9 +47,6 @@ export async function resetfunction() {
   const { startofDay, endofDay, startTomorrow } = getDate();
 
   await prisma.$transaction(async (tx) => {
-    //get all table
-    const table = await tx.table.findMany();
-
     //get tomorrow reservation
     const tomorrowReservation = await tx.reservation.findMany({
       where: {
@@ -171,8 +168,8 @@ export function genrateslots() {
   return slots;
 }
 
-//automatic reset the tale for tomorrow
-cron.schedule("0 0 * * *", async () => {
-  console.log("Running scheduled table reset...");
-  await resetfunction();
-});
+// //automatic reset the tale for tomorrow
+// cron.schedule("0 0 * * *", async () => {
+//   console.log("Running scheduled table reset...");
+//   await resetfunction();
+// });

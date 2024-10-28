@@ -19,29 +19,17 @@ export async function POST(req: Request) {
   return Response.json(ordernow);
 }
 
-// export async function GET() {
-//   const allorders = await prisma.order.findMany({
-//         include:{
-//       item:true
-//     }
-//   });
-//   return Response.json( allorders );
-// }
-export async function GET(req:Request,{params}:{params:{id:string}}) {
-  try{
-    const id = parseInt(params.id)
-  const allorders = await prisma.order.findMany({
-        where:{
-          id : id
-        },
-        include:{
-      item:true
-    }
-  });
-  return Response.json( allorders );
-}catch(e){
-    throw new Error("user can't find it")
-}
+export async function GET() {
+  try {
+    const allorders = await prisma.order.findMany({
+      include: {
+        item: true,
+      },
+    });
+    return Response.json(allorders);
+  } catch (e) {
+    throw new Error("user can't find it");
+  }
 }
 
 //see all order , i will do it use it websocket
