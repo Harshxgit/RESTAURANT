@@ -4,42 +4,34 @@ import prisma from "@/db";
 
 export async function order(
   userid: number,
-  partysize: string,
+  partysize: number,
   price: number,
   menuitem: { menuItemid: string; menuItemname: string; menuitemqty: string }[],
-  totalmenuquantity: number,
-
+  totalmenuquantity: number
 ) {
- 
   try {
     const isorderd = prisma.$transaction(async (tx) => {
       const order = await tx.order.create({
         data: {
           userId: userid,
-          total: partysize
-        }
+          partysize: partysize,
+        },
       });
-      const orderid = order.id;
-      const menuitems = menuitem.map((item) => {
-        return {
-          menuitmeid: item.menuItemid,
-          manuItemname: item.menuItemname,
-          menuitemqty: item.menuitemqty,
-        };
-      });
+      const  orderid = order.id;
+      console.log(orderid);
 
-      await prisma.orderItem.create({
+      await tx.orderItem.create({
         data: {
           orderid: orderid,
           quantity: totalmenuquantity,
           price: price,
-          menuitem: menuitems,
+          menuitem: menuitem,
         },
       });
     });
-    if(!isorderd) return {"message":"failed to order not placed"}
-     return {"message":"order placed"}
+    if (!isorderd) return { message: "failed to order not placed" };
+    return { message: "order placed" };
   } catch (e) {
-    throw new Error("order not placed")
+    throw new Error("order not placed");
   }
 }

@@ -8,22 +8,26 @@ export async function GET() {
     if (!data) return Response.json({ error: "menu data not found" });
     return Response.json(data);
   } catch (error) {
-    Response.json({ error: "failed to fetch data" });
+    return Response.json({ error: "failed to fetch data" });
   }
 }
+
 
 export async function POST(req: Request) {
   const { name, price, description, category } = await req.json();
   if (!name || !price || !description || !category)
     return Response.json({ error: "data not found" });
   try {
+ 
     const insertdata = await addMenu(name, price, description, category);
     if (!insertdata) return Response.json({ error: "data not found" });
-    return Response.json({ message: "Menu Item Added" });
+    return Response.json(insertdata);
   } catch (e) {
     return Response.json({ error: "failed" });
   }
 }
+
+
 export async function PUT(req: Request) {
   const { name, price, description, id, category } = await req.json();
   if (!name || !price || !description || !category || !id)
@@ -42,6 +46,7 @@ export async function PUT(req: Request) {
   if (!update) return Response.json({ message: "update failed" });
   return Response.json({ message: "data updated" });
 }
+
 
 export async function DELETE(req: Request) {
   const { id } = await req.json();
