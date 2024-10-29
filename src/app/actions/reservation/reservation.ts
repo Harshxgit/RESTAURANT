@@ -5,7 +5,7 @@ import prisma from "@/db";
 //main reservation function
 export async function reserveNow(
   userid: number,
-  date: string,
+  date: Date,
   time: string,
   partysize: string,
   tableid: number,
@@ -25,6 +25,7 @@ export async function reserveNow(
         },
       });
     });
+ 
     if (!isreserve) return Response.json({"message":"failed to reserve"})
     return Response.json({"message":"table reserved"})
   } catch (e) {

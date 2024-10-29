@@ -70,7 +70,7 @@ model Reservation {
   id        Int                @id @default(autoincrement())
   userId    Int
   user      User               @relation(fields: [userId], references: [id])
-  date      DateTime
+  date      DateTime            @db.Date
   time      String
   partysize String
   status    ReservationStatus?
