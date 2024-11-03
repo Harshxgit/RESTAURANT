@@ -163,7 +163,7 @@ export function genrateslots() {
   const slots = [];
   const starthrs = 10;
   const endhrs = 22;
-  for (let hrs = starthrs; hrs < starthrs; hrs++) {
+  for (let hrs = starthrs; hrs < endhrs; hrs++) {
     slots.push(`${hrs.toString().padStart(2, "0")}:00`);
   }
   return slots;
