@@ -3,7 +3,7 @@ import { wsservice } from "@/app/actions/websocket/service";
 import { string } from "zod";
 import { getAlltable } from "@/app/actions/reservation/reservation";
 
-const wss = new WebSocketServer({ port: 3001 });
+const wss = new WebSocketServer({ port: 3000 });
 
 wss.on("connection", async (ws) => {
   console.log("new client connected");
@@ -17,7 +17,7 @@ wss.on("connection", async (ws) => {
     const data = JSON.parse(messageString);
 
     if (data.type === "filterdate") {
-      const tabledata = getAlltable(data.date);
+      const tabledata = await getAlltable(data.date);
       ws.send(
         JSON.stringify({
           type: "all table",
