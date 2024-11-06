@@ -1,14 +1,14 @@
-const {createServer} = require('http');
+const { createServer } = require("http");
 const { Server } = require("socket.io");
 const next = require("next");
-const { server } = require("typescript");
+
 
 const dev = process.env.NODE_ENV !== "production";
-const hostname = 'localhost';
+const hostname = "localhost";
 const port = process.env.PORT || 3000;
 
 //initialize Next.js Server
-const app = next({ dev, hostname ,port });
+const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
