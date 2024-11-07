@@ -1,11 +1,11 @@
-const { createServer } = require("http");
-const { Server } = require("socket.io");
-const next = require("next");
+import { createServer } from "http";
+import { Server } from "socket.io";
+import next from "next";
 
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = "localhost";
-const port = process.env.PORT || 3000;
+const port:number|undefined = process.env.PORT ? Number(process.env.Port) || 3000:undefined ;
 
 //initialize Next.js Server
 const app = next({ dev, hostname, port });
@@ -25,8 +25,7 @@ app.prepare().then(() => {
     });
   });
 
-  server.listen(3000, (err) => {
-    if (err) throw err;
-    console.log("Server running on http://localhost:3000");
+  server.listen(port, () => {
+        console.log(`Server running on ${port}`);
   });
 });
