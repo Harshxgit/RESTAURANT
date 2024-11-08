@@ -1,31 +1,26 @@
-import { createServer } from "http";
-import { Server } from "socket.io";
-import next from "next";
+import { initsocket } from "@/app/actions/websocket/service";
 
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+const next = require("next");
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = "localhost";
-const port:number|undefined = process.env.PORT ? Number(process.env.Port) || 3000:undefined ;
+const port = process.env.PORT ? Number(process.env.PORT) : 3000;
 
 //initialize Next.js Server
 const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
+  //@ts-ignore
   const server = createServer((req, res) => {
     handle(req, res);
   });
 
-  const io = new Server(server);
-
-  io.on("connection", (socket) => {
-    console.log("New client connected");
-    socket.on("disconnect", () => {
-      console.log("client disconnected");
-    });
-  });
+  initsocket(server);
 
   server.listen(port, () => {
-        console.log(`Server running on ${port}`);
+    console.log(`Server running on ${port}`);
   });
 });
