@@ -1,5 +1,4 @@
-import { initsocket } from "@/app/actions/websocket/service";
-
+const {initSocket} = require("./socket")
 const { createServer } = require("http");
 const { Server } = require("socket.io");
 const next = require("next");
@@ -18,7 +17,7 @@ app.prepare().then(() => {
     handle(req, res);
   });
 
-  initsocket(server);
+  initSocket(server);
 
   server.listen(port, () => {
     console.log(`Server running on ${port}`);
