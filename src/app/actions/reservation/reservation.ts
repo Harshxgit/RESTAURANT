@@ -1,7 +1,10 @@
 import prisma from "@/db";
+import { getIO } from "../../../../server/socket";
 // import cron from "node-cron";
 //resete function for reset all table for tomorrow leaving this reserver table
 
+
+const io = getIO();
 //main reservation function
 export async function reserveNow(
   userid: number,
@@ -9,7 +12,8 @@ export async function reserveNow(
   time: string,
   partysize: string,
   tableid: number,
- ) {
+  username: string
+) {
   try {
     // const gettabledata = await getAlltable(date);
     // const isAvailable = await checkavailability(gettabledata, time, date);
@@ -25,9 +29,21 @@ export async function reserveNow(
         },
       });
     });
- 
-    if (!isreserve) return Response.json({"message":"failed to reserve"})
-    return Response.json({"message":"table reserved"})
+
+    if (!isreserve) return Response.json({ message: "failed to reserve" });
+
+    if (!!isreserve) {
+      
+
+      io.of('/admin').emit("nowReservedtabel", {
+        tableid: tableid,
+        userid: userid,
+        username: username,
+        time: time,
+        date: date,
+      });
+    }
+    return Response.json({ message: "table reserved" });
   } catch (e) {
     throw new Error("failed to reserve");
   }
@@ -99,8 +115,7 @@ export async function resetfunction() {
   });
 }
 
-
-//get all table on a given date which are available or which are not
+//get all table on a given date which are show availabilty
 export async function getAlltable(inputDate: string) {
   try {
     const requestedDate = new Date(inputDate);
@@ -139,12 +154,26 @@ export async function getAlltable(inputDate: string) {
         ),
       }));
     });
-    return availabilty;
+
+    io.of('/client').emit('filterdate',{
+      alltable : availabilty
+    })
+    io.of('/admin').emit('filterdate',{
+      alltable : availabilty
+    })
+    io.of('/client').emit('alltable',{
+      alltable : availabilty
+    })
+    io.of('/admin').emit('alltable',{
+      alltable : availabilty
+    })
+
+    // return availabilty;
+    
   } catch (e) {
     throw new Error("message");
   }
 }
-
 
 //check availabel condition using checking condition
 export async function checkavailability(
@@ -156,7 +185,6 @@ export async function checkavailability(
   getslots.some((r: any) => r.tableid === tableid);
   return getslots;
 }
-
 
 //genrate slots
 export function genrateslots() {
