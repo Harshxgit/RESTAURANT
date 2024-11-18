@@ -1,5 +1,6 @@
 import prisma from "@/db";
 import { getIO } from "../../../../server/socket";
+import { order } from "../order/order";
 // import cron from "node-cron";
 //resete function for reset all table for tomorrow leaving this reserver table
 
@@ -10,9 +11,12 @@ export async function reserveNow(
   userid: number,
   date: Date,
   time: string,
-  partysize: string,
+  partysize: number,
   tableid: number,
-  username: string
+  username: string,
+  menuitem: { menuItemid: string; menuItemname: string; menuitemqty: string }[],
+  totalmenuquantity: number,
+  price : number
 ) {
   try {
     // const gettabledata = await getAlltable(date);
@@ -28,8 +32,12 @@ export async function reserveNow(
           time: time,
         },
       });
+      if(!!menuitem){
+        order(userid,partysize,totalmenuquantity,price,menuitem)
+      }
     });
 
+    
     if (!isreserve) return Response.json({ message: "failed to reserve" });
 
     if (!!isreserve) {

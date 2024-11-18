@@ -46,6 +46,9 @@ model Order {
   item          OrderItem[]
   reservationid Int?         @unique
   Reservation   Reservation? @relation(fields: [reservationid], references: [id])
+  type          String
+  //instant order 
+  //live order
 }
 
 model MenuItem {
@@ -73,13 +76,13 @@ model Reservation {
   user      User               @relation(fields: [userId], references: [id])
   date      DateTime           @db.Date
   time      String
-  partysize String
+  partysize Int
   status    ReservationStatus?
   createdAt DateTime           @default(now())
   updatedAt DateTime?          @updatedAt
   TableId   Int
   table     Table              @relation(fields: [TableId], references: [id])
-  items     Order[]
+  order     Order?
 }
 
 model Table {
