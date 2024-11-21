@@ -1,4 +1,6 @@
+'use client'
 import React, { useEffect, useState } from "react";
+
 
 export default function page() {
   const [socket, setSocket] = useState<WebSocket | null>(null);

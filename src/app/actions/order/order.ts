@@ -7,15 +7,17 @@ export async function order(
   partysize: number,
   price: number,
   menuitem: { menuItemid: string; menuItemname: string; menuitemqty: string }[],
-  totalmenuquantity: number
+  totalmenuquantity: number,
+  type:string
 ) {
   try {
     const isorderd = prisma.$transaction(async (tx) => {
       const order = await tx.order.create({
-        data: {
+        data:{
+          partysize : partysize,
           userId: userid,
-          partysize: partysize,
-        },
+          type : type
+        }
       });
       const  orderid = order.id;
       console.log(orderid);

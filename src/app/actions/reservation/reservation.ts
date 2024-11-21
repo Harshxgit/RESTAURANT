@@ -16,7 +16,8 @@ export async function reserveNow(
   username: string,
   menuitem: { menuItemid: string; menuItemname: string; menuitemqty: string }[],
   totalmenuquantity: number,
-  price : number
+  price : number,
+  ordertype : string
 ) {
   try {
     // const gettabledata = await getAlltable(date);
@@ -33,7 +34,7 @@ export async function reserveNow(
         },
       });
       if(!!menuitem){
-        order(userid,partysize,totalmenuquantity,price,menuitem)
+        order(userid,partysize,totalmenuquantity,menuitem,price,ordertype)
       }
     });
 

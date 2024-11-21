@@ -1,22 +1,23 @@
 import { order } from "@/app/actions/order/order";
 import prisma from "@/db";
-
+import { NextResponse } from "next/server";
 //place order function
 export async function POST(req: Request) {
-  const { userid, partysize, price, menuitem, totalmenuquantity } =
+  const { userid, partysize, price, menuitem, totalmenuquantity ,ordertype} =
     await req.json();
-  if (!userid || !partysize || !price || !menuitem || !totalmenuquantity)
-    return { message: "not credentials" };
+  if (!userid || !partysize || !price || !menuitem || !totalmenuquantity ||!ordertype)
+    return NextResponse.json({ message: "not credentials" });
 
   const ordernow = await order(
     userid,
     partysize,
     price,
     menuitem,
-    totalmenuquantity
+    totalmenuquantity,
+    ordertype
   );
   if (!ordernow) return Response.json({ message: ordernow });
-  return Response.json(ordernow);
+  return NextResponse.json(ordernow);
 }
 
 export async function GET() {
@@ -26,7 +27,7 @@ export async function GET() {
         item: true,
       },
     });
-    return Response.json(allorders);
+    return NextResponse.json(allorders);
   } catch (e) {
     throw new Error("user can't find it");
   }
