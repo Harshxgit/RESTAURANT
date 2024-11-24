@@ -30,7 +30,7 @@ jobs:
         tags: harshuuu/restauss:latest
 
     - name: Verify Pushed Image
-      run: docker pull restauss:latest
+      run: docker pull harshuuu/restauss:latest
 
     - name: Deploy to EC2
       uses: appleboy/ssh-action@master
