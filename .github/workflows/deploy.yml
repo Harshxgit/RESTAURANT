@@ -27,10 +27,10 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: 100xdevs/web-app:latest
+        tags: harshuuu/restauss:latest
 
     - name: Verify Pushed Image
-      run: docker pull 100xdevs/web-app:latest
+      run: docker pull harshuuu/restauss:latest
 
     - name: Deploy to EC2
       uses: appleboy/ssh-action@master
@@ -42,4 +42,4 @@ jobs:
           sudo docker pull harshuuu/restauss:latest
           sudo docker stop web-app || true
           sudo docker rm web-app || true
-          sudo docker run -d --name web-app -p 3005:3000 100xdevs/web-app:latest
+          sudo docker run -d --name restauss -p 3005:3000 harshuuu/restauss:latest
