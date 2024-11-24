@@ -27,7 +27,7 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: restauss:latest
+        tags: harshuuu/restauss:latest
 
     - name: Verify Pushed Image
       run: docker pull restauss:latest
@@ -40,6 +40,6 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         script: |
           sudo docker pull harshuuu/restauss:latest
-          sudo docker stop web-app || true
-          sudo docker rm web-app || true
+          sudo docker stop restauss || true
+          sudo docker rm restauss || true
           sudo docker run -d --name restauss -p 3005:3000 harshuuu/restauss:latest
