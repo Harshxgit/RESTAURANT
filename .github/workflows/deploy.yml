@@ -3,43 +3,43 @@ name: Build and Deploy to Docker Hub
 on:
   push:
     branches:
-      - main  # Adjusted to trigger on pushes to master
+      - main # Adjusted to trigger on pushes to master
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     steps:
-    - name: Check Out Repo
-      uses: actions/checkout@v2
+      - name: Check Out Repo
+        uses: actions/checkout@v2
 
-    - name: Prepare Dockerfile
-      run: cp dockerfile ./Dockerfile
+      - name: Prepare Dockerfile
+        run: cp dockerfile ./Dockerfile
 
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v1
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Build and Push Docker image
-      uses: docker/build-push-action@v2
-      with:
-        context: .
-        file: ./Dockerfile
-        push: true
-        tags: harshuuu/restauss:latest
+      - name: Build and Push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: harshuuu/restauss:latest
 
-    - name: Verify Pushed Image
-      run: docker pull harshuuu/restauss:latest
+      - name: Verify Pushed Image
+        run: docker pull harshuuu/restauss:latest
 
-    - name: Deploy to EC2
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USERNAME }}
-        key: ${{ secrets.SSH_KEY }}
-        script: |
-          sudo docker pull harshuuu/restauss:latest
-          sudo docker stop restauss || true
-          sudo docker rm restauss || true
-          sudo docker run -d --name restauss -p 3005:3000 harshuuu/restauss:latest 
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            sudo docker pull harshuuu/restauss:latest
+            sudo docker stop restauss || true
+            sudo docker rm restauss || true
+            sudo docker run \-e DATABASE_URL=${{secret.DATABASE_URL}}\-e NEXTAUTH_URL=${{secret.NEXTAUTH_URL}}\-e NEXTAUTH_SECRET=${{secret.NEXTAUTH_SECRET}}\-e TWILIO_ACCOUNT_SID=${{secret.TWILIO_ACCOUNT_SID}}\-e TWILIO_AUTH_TOKEN=${{secret.TWILIO_AUTH_TOKEN}}\-e TWILIO_PHONE_NUMBER=${{secret.TWILIO_PHONE_NUMBER}}\-e CLOUDFLARE=${{secret.CLOUDFLARE}}\ -d --name restauss -p 3005:3000 harshuuu/restauss:latest
