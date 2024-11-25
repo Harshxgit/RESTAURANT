@@ -42,4 +42,12 @@ jobs:
           sudo docker pull harshuuu/restauss:latest
           sudo docker stop restauss || true
           sudo docker rm restauss || true
-          sudo docker run -d --name restauss -p 3005:3000 harshuuu/restauss:latest 
+          sudo docker run \
+    -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
+    -e NEXTAUTH_URL="${{ secrets.NEXTAUTH_URL }}" \
+    -e NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}" \
+    -e TWILIO_ACCOUNT_SID="${{ secrets.TWILIO_ACCOUNT_SID }}" \
+    -e TWILIO_AUTH_TOKEN="${{ secrets.TWILIO_AUTH_TOKEN }}" \
+    -e TWILIO_PHONE_NUMBER="${{ secrets.TWILIO_PHONE_NUMBER }}" \
+    -e CLOUDFLARE="${{ secrets.CLOUDFLARE }}" \
+    -d --name restauss -p 3005:3000 harshuuu/restauss:latest
