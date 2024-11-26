@@ -7,6 +7,7 @@ import { sendOTP, verifyOtp } from "@/app/actions/otp";
 import { verify } from "crypto";
 import { findUser, setUser } from "@/app/actions/user/userDetails";
 
+
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
