@@ -23,11 +23,9 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials: any): Promise<any> {
         if (!credentials) throw new Error("No credentials");
 
-        const { number, otp, password, step, mode, } = credentials;
+        const { number, otp, password, step, mode } = credentials;
 
         try {
-     
-
           if (mode === "login") {
             //sign in verify with otp
             const user = await findUser(number);
@@ -39,11 +37,11 @@ export const authOptions: NextAuthOptions = {
             }
 
             if (step === "password") {
-              console.log("control reach here")
-              console.log( user.password)
+              console.log("control reach here");
+              console.log(user.password);
               const iscorrectpassword = await bcrypt.compare(
                 password,
-                user.password,
+                user.password
               );
               if (iscorrectpassword) return user;
               else throw new Error("password not matched");
@@ -72,7 +70,6 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
-    
   },
   session: {
     strategy: "jwt",
