@@ -50,10 +50,7 @@ export default function page() {
   const sendotp = async (e: { preventDefault: () => void }) => {
     //check user exist or not
     const existuser = await findUser(number);
-    if (!existuser) {
-      setMessage("user not found");
-      router.push("/signup");
-    }
+    if (!existuser) return {"message":"number is wrong"}
     console.log("otp sent");
     await sendOTP(number, token);
     setMessage("!OTP Sent");

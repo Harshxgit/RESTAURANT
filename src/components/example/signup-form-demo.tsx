@@ -11,8 +11,9 @@ import {
   IconBrandOnlyfans,
 } from "@tabler/icons-react";
 import { sendOTP, verifyOtp } from "@/app/actions/otp";
-import { findUser, setUserAdress } from "@/app/actions/user/userDetails";
+import { findUser } from "@/app/actions/user/userDetails";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 export default function SignupFormDemo() {
   const { pending } = useFormStatus();
@@ -21,16 +22,16 @@ export default function SignupFormDemo() {
   //states
   const [number, setNumber] = useState("");
   const [isotpverfied, setOtpverified] = useState(false);
+
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
+  const [password, setPassword] = useState("");
+
   const [message, setMessage] = useState("");
   const [otp, setotp] = useState("");
   const [token, setToken] = useState("");
-  const [state, formAction] = useFormState(setUserAdress, null);
 
   useEffect(() => {
-    if (state?.sucess) {
-      router.push("/sign-in");
-    }
-
     const verify = async () => {
       if (otp.length == 6) {
         const verify = await verifyOtp(number, otp);
@@ -45,30 +46,40 @@ export default function SignupFormDemo() {
       }
     };
     verify();
-  }, [otp, state, router]);
-
-  // const handlesumbit = (e: { preventDefault: () => void; })=>{
-  //     e.preventDefault()
-
-  // }
+  }, [otp, router]);
 
   //send otp server action function
   const sendotp = async (e: { preventDefault: () => void }) => {
-    //check user exist or not
     const existuser = await findUser(number);
-    if (existuser) return setMessage("user already exist");
-    console.log("otp sent");
+
+    //check user exist or not
+    if (!existuser) {
+      setMessage("user not found");
+      router.push("/signup");
+    }
+
     await sendOTP(number, token);
     setMessage("!OTP Sent");
     e.preventDefault();
   };
+  const signuplogin = async() => {
+    const response = await signIn("credentials",{
+      number:number,
+      firstname :firstname,
+      lastname : lastname,
+      password : password
+    })
+    if(response) setMessage("signup sucessfully")
+      setMessage("signup failed ")
+  };
+
   return (
     <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
       <>
         <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
           Welcome to Our Restaurant
         </h2>
-        <form className="my-8" action={formAction}>
+        <form className="my-8" onSubmit={signuplogin}>
           <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
             <LabelInputContainer>
               <Label htmlFor="firstname">First name</Label>
@@ -78,6 +89,7 @@ export default function SignupFormDemo() {
                 type="text"
                 name="firstname"
                 required
+                onChange={(e) => setFirstname(e.target.value)}
               />
             </LabelInputContainer>
             <LabelInputContainer>
@@ -88,7 +100,7 @@ export default function SignupFormDemo() {
                 type="text"
                 name="lastname"
                 required
-              />
+                onChange={(e)=>setLastname(e.target.value)} />
             </LabelInputContainer>
           </div>
           <LabelInputContainer className="mb-4">
@@ -128,6 +140,7 @@ export default function SignupFormDemo() {
               placeholder="••••••••"
               type="password"
               name="password"
+              onChange={(e)=>setPassword(e.target.value)}
             />
           </LabelInputContainer>
 

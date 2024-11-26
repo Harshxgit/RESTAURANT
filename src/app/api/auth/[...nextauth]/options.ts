@@ -5,7 +5,8 @@ import { error } from "console";
 import prisma from "@/db";
 import { sendOTP, verifyOtp } from "@/app/actions/otp";
 import { verify } from "crypto";
-import { findUser } from "@/app/actions/user/userDetails";
+import { findUser, setUser } from "@/app/actions/user/userDetails";
+
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -19,15 +20,16 @@ export const authOptions: NextAuthOptions = {
         step: { label: "Step", type: "hidden" },
         mode: { label: "mode", type: "hidden" },
         token: { label: "token", type: "hidden" },
+        firstname: { label: "Firstname", type: "text" },
+        lastname: { label: "Lastname", type: "text" },
       },
       async authorize(credentials: any): Promise<any> {
         if (!credentials) throw new Error("No credentials");
 
-        const { number, otp, password, step, mode, } = credentials;
+        const { number, otp, password, step, mode, firstname, lastname } =
+          credentials;
 
         try {
-     
-
           if (mode === "login") {
             //sign in verify with otp
             const user = await findUser(number);
@@ -39,15 +41,24 @@ export const authOptions: NextAuthOptions = {
             }
 
             if (step === "password") {
-              console.log("control reach here")
-              console.log( user.password)
+              console.log("control reach here");
+              console.log(user.password);
               const iscorrectpassword = await bcrypt.compare(
                 password,
-                user.password,
+                user.password
               );
               if (iscorrectpassword) return user;
               else throw new Error("password not matched");
             }
+          }
+          if (mode == "signup") {
+            //first check if user existed
+            const user = await findUser(number);
+            if (user) throw new Error("User Already existed!");
+
+            const createUser = await setUser(number, password, firstname, lastname);
+            if(createUser) return user
+            else throw new Error("user not signed-Up")
           }
         } catch (err: any) {
           throw new Error(err);
@@ -72,7 +83,6 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
-    
   },
   session: {
     strategy: "jwt",
