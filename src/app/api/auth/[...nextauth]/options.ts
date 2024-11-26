@@ -19,13 +19,14 @@ export const authOptions: NextAuthOptions = {
         step: { label: "Step", type: "hidden" },
         mode: { label: "mode", type: "hidden" },
         token: { label: "token", type: "hidden" },
-        firstname:{label:"firstname",type:"hidden"},
-        lastname:{label:"lastname",type:"hidden"},
+        firstname: { label: "Firstname", type: "text" },
+        lastname: { label: "Lastname", type: "text" },
       },
       async authorize(credentials: any): Promise<any> {
         if (!credentials) throw new Error("No credentials");
 
-        const { number, otp, password, step, mode } = credentials;
+        const { number, otp, password, step, mode, firstname, lastname } =
+          credentials;
 
         try {
           if (mode === "login") {
@@ -49,14 +50,14 @@ export const authOptions: NextAuthOptions = {
               else throw new Error("password not matched");
             }
           }
-          if(mode =="signup"){
+          if (mode == "signup") {
             //first check if user existed
             const user = await findUser(number);
-            if(user) throw new Error("User Already existed!");
+            if (user) throw new Error("User Already existed!");
 
-            const createUser = setUser(FormData )
-
-            
+            const createUser = await setUser(number, password, firstname, lastname);
+            if(createUser) return user
+            else throw new Error("user not signed-Up")
           }
         } catch (err: any) {
           throw new Error(err);

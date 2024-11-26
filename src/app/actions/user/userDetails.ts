@@ -14,7 +14,7 @@ export async function findUser(number: string) {
 
 
 
-export async function setUser(firstname: string , lastname :string , password : string ,number:string) {
+export async function setUser(firstname: string , lastname :string , password : string ,number:string){
 
   const hashpassword = await bcrypt.hash(password, 10);
   try {
