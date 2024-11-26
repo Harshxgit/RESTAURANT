@@ -5,7 +5,7 @@ import { error } from "console";
 import prisma from "@/db";
 import { sendOTP, verifyOtp } from "@/app/actions/otp";
 import { verify } from "crypto";
-import { findUser } from "@/app/actions/user/userDetails";
+import { findUser, setUser } from "@/app/actions/user/userDetails";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -19,6 +19,8 @@ export const authOptions: NextAuthOptions = {
         step: { label: "Step", type: "hidden" },
         mode: { label: "mode", type: "hidden" },
         token: { label: "token", type: "hidden" },
+        firstname:{label:"firstname",type:"hidden"},
+        lastname:{label:"lastname",type:"hidden"},
       },
       async authorize(credentials: any): Promise<any> {
         if (!credentials) throw new Error("No credentials");
@@ -46,6 +48,15 @@ export const authOptions: NextAuthOptions = {
               if (iscorrectpassword) return user;
               else throw new Error("password not matched");
             }
+          }
+          if(mode =="signup"){
+            //first check if user existed
+            const user = await findUser(number);
+            if(user) throw new Error("User Already existed!");
+
+            const createUser = setUser(FormData )
+
+            
           }
         } catch (err: any) {
           throw new Error(err);

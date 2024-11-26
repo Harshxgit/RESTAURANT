@@ -12,23 +12,10 @@ export async function findUser(number: string) {
   return user;
 }
 
-type FormState = {
-  firstname?: string;
-  lastname?: string;
-  password?: string;
-  number?: string;
-  sucess?: boolean;
-  error?: string;
-};
 
-export async function setUserAdress(
-  prevState: FormState | null,
-  FormData: FormData
-): Promise<FormState | never> {
-  const firstname = FormData.get("firstname") as string;
-  const lastname = FormData.get("lastname") as string;
-  const number = FormData.get("number") as string;
-  const password = FormData.get("password") as string;
+
+export async function setUser(firstname: string , lastname :string , password : string ,number:string) {
+
   const hashpassword = await bcrypt.hash(password, 10);
   try {
     const usercreate = await prisma.user.create({
