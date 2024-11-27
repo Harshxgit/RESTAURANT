@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
+import { Label } from "../LIBRARY/label";
+import { Input } from "../LIBRARY/input";
 import { cn } from "@/lib/utils";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { useFormState, useFormStatus } from "react-dom";
@@ -15,7 +15,7 @@ import { findUser } from "@/app/actions/user/userDetails";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 
-export default function SignupFormDemo() {
+export default function Signup() {
   const { pending } = useFormStatus();
   const router = useRouter();
 
