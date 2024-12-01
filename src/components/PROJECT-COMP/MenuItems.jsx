@@ -22,13 +22,17 @@ export default function MenuItems() {
   return (
     <div>
       <div>
-        {object.entries(getmenu).map(([itemType, item]) =>
-         (
+        {object.entries(getmenu).map(([itemType, items]) => (
           <>
-          <div>{itemType}</div>
-          <div>{item.map((name)=>(
-             <>{name}</>
-          ))}</div>
+            <div>{itemType}</div>
+            <div>
+              {items.map((item) => (
+                <div>
+                  <div>{item.name}</div>
+                  <div>{item.img}</div>
+                </div>
+              ))}
+            </div>
           </>
         ))}
       </div>
