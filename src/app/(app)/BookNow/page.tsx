@@ -1,16 +1,17 @@
 "use client"
 import { order } from '@/app/actions/order/order'
-import { getSession } from 'next-auth/react'
+import {  useSession } from 'next-auth/react'
 import React, { useState } from 'react'
 
 //get user details from session 
 export default function page() {
-  const session = getSession()
+  const {data:session} = useSession()
   const [items , setItems] = useState({})
   const [price , setPrice] = useState(0)
-
+  const [type, setType] = useState()
+const partysize = 0
   const onBook =()=>{
-    const sucess = order(items , session.user._id , price , totalmenuquantity ,  )
+    const sucess = order( session?.user._id ,items, price , type ,items.length , partysize ) 
   }
   const onDrag =({item}:any)=>{
     if(item.name){
