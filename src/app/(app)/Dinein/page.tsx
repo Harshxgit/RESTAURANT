@@ -9,7 +9,7 @@ export default function page() {
   const [items , setItems] = useState({})
   const [price , setPrice] = useState(0)
   const [type, setType] = useState()
-const partysize = 0
+const partysize = 00
   const onBook =()=>{
     const sucess = order( session?.user._id ,items, price , type ,items.length , partysize ) 
   }
