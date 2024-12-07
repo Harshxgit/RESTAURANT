@@ -13,14 +13,19 @@ interface Items {
   updatedAt: Date | null;
 }
 
-interface groupItems{
-  [category:string] : Items[]
+interface groupItems {
+  [category: string]: Items[];
 }
-
 
 export default function MenuItems() {
   const [allmenu, setAllmenu] = useState<Items[]>([]);
   const [getmenu, setGetmenu] = useState<groupItems>();
+  const [selecteditems, setSelecteditems] = useState<Items[]>();
+
+  const setSelecteditem=(items: Items[])=>{
+          setSelecteditem(items)
+  }
+
   useEffect(() => {
     (async () => {
       const menu = await getMenu();
@@ -29,11 +34,10 @@ export default function MenuItems() {
 
     const getmenu = allmenu.reduce<groupItems>((acc, curr) => {
       if (!acc[curr.category]) {
-        acc[curr.category] = []
-      } 
-        acc[curr.category].push(curr)
-      
-      return acc
+        acc[curr.category] = [];
+      }
+      acc[curr.category].push(curr);
+      return acc;
     }, {});
 
     setGetmenu(getmenu);
@@ -43,7 +47,7 @@ export default function MenuItems() {
       <div>
         {Object.entries(getmenu ?? {}).map(([itemType, items]) => (
           <>
-            <div>{itemType}</div>
+            <div onClick={()=>setSelecteditem(items)}>{itemType}</div>
             <div>
               {items.map((item) => (
                 <div>
@@ -53,8 +57,7 @@ export default function MenuItems() {
               ))}
             </div>
           </>
-        )
-        )}
+        ))}
       </div>
     </div>
   );
