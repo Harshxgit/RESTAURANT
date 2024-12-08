@@ -52,7 +52,6 @@ export default function MenuItems() {
               {items.map((item) => (
                 <div>
                   <div>{item.name}</div>
-                  {/* <div>{item.img}</div> */}
                 </div>
               ))}
             </div>
