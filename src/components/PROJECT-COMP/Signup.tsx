@@ -53,8 +53,8 @@ export default function Signup() {
     const existuser = await findUser(number);
 
     //check user exist or not
-    if (!existuser) {
-      setMessage("user not found");
+    if (existuser) {
+      setMessage("user existed");
       router.push("/signup");
     }
 
@@ -63,14 +63,19 @@ export default function Signup() {
     e.preventDefault();
   };
   const signuplogin = async() => {
+    console.log("hii lsdjfldksjfdslfdsf")
     const response = await signIn("credentials",{
+      mode :"signup",
       number:number,
       firstname :firstname,
       lastname : lastname,
-      password : password
+      password : password,
     })
-    if(response) setMessage("signup sucessfully")
-      setMessage("signup failed ")
+    if(response?.ok){
+        router.push("/dinein")
+    }else{
+      setMessage("signup Sucessfully ")
+    }
   };
 
   return (
@@ -79,7 +84,7 @@ export default function Signup() {
         <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
           Welcome to Our Restaurant
         </h2>
-        <form className="my-8" onSubmit={signuplogin}>
+        <form className="my-8" >
           <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
             <LabelInputContainer>
               <Label htmlFor="firstname">First name</Label>
@@ -146,8 +151,9 @@ export default function Signup() {
 
           <button
             className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-            type="submit"
-            aira-disabled={pending}
+            
+            onClick={signuplogin}
+            
           >
             {pending ? "Signing up" : "Sign up"} &rarr;
             <BottomGradient />

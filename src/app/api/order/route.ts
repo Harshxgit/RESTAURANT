@@ -3,9 +3,16 @@ import prisma from "@/db";
 import { NextResponse } from "next/server";
 //place order function
 export async function POST(req: Request) {
-  const { userid, partysize, price, menuitem, totalmenuquantity ,ordertype} =
+  const { userid, partysize, price, menuitem, totalmenuquantity, ordertype } =
     await req.json();
-  if (!userid || !partysize || !price || !menuitem || !totalmenuquantity ||!ordertype)
+  if (
+    !userid ||
+    !partysize ||
+    !price ||
+    !menuitem ||
+    !totalmenuquantity ||
+    !ordertype
+  )
     return NextResponse.json({ message: "not credentials" });
 
   const ordernow = await order(

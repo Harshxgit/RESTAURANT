@@ -25,7 +25,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "data not found" }, { status: 404 });
     return NextResponse.json(insertdata, { status: 202 });
   } catch (e) {
-    console.log(e)
     return NextResponse.json({ error: "failed" }, { status: 404 });
   }
 }

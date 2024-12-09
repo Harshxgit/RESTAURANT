@@ -1,4 +1,4 @@
-"use table"
+"use client"
 import MenuItems from '@/components/PROJECT-COMP/MenuItems'
 
 import React from 'react'

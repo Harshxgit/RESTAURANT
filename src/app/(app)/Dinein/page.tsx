@@ -1,7 +1,8 @@
 "use client"
 import { order } from '@/app/actions/order/order'
+import MenuItems from '@/components/PROJECT-COMP/MenuItems'
 import {  useSession } from 'next-auth/react'
-import React, { useState } from 'react'
+import React, { ReactEventHandler, useState } from 'react'
 import { object } from 'zod'
 
 //get user details from session 
@@ -15,16 +16,16 @@ export default function page() {
   const onBook =()=>{
     const sucess = order( session?.user._id ,partysize,  price ,items, totalmenuquantity,type ) 
   }
-  const handledragStart = (e)=>{
+  const handledragStart = (e:ReactEventHandler,item:any)=>{
     item.setelement(item.id)
   }
   const onDrop =({item}:any)=>{
-    if(item.name){
-      setItems(item.qty++)
-      setPrice(price)
+    if(!item.name){
+      setItems(item)
+      setPrice(price + item.price)
     }
+    setPrice(price)
     setItems(item)
-    setPrice(price + item.price)
   }
   const onDelete = ()=>{
     //whenever drag from the cart
@@ -33,7 +34,8 @@ export default function page() {
     // then run filter from items.
   }
   return (
-    <div  >
+    <>
+      <MenuItems/>
       <div>
         remove item from dashboard
       </div>
@@ -44,6 +46,6 @@ export default function page() {
       <div>
         Book Now
       </div>
-    </div>
+    </>
   )
 }

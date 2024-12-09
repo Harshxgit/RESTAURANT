@@ -50,15 +50,16 @@ export const authOptions: NextAuthOptions = {
               if (iscorrectpassword) return user;
               else throw new Error("password not matched");
             }
-          }
-          if (mode == "signup") {
-            //first check if user existed
-            const user = await findUser(number);
-            if (user) throw new Error("User Already existed!");
-
-            const createUser = await setUser(number, password, firstname, lastname);
-            if(createUser) return user
-            else throw new Error("user not signed-Up")
+            if (mode === "signup") {
+              console.log("reaches here")
+              //first check if user existed
+              const user = await findUser(number);
+              if (user) throw new Error("User Already existed!");
+              console.log("failed to find")
+              const createUser = await setUser(number, password, firstname, lastname);
+              if(createUser) return user
+              else throw new Error("user not signed-Up")
+            }
           }
         } catch (err: any) {
           throw new Error(err);
@@ -90,5 +91,6 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: "/sign-in",
+
   },
 };
