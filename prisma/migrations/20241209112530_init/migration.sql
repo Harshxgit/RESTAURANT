@@ -1,21 +1,43 @@
 -- CreateEnum
-CREATE TYPE "ReservationStatus" AS ENUM ('PENDING', 'CONFIRMED', 'CANCELLED');
+CREATE TYPE "ReservationStatus" AS ENUM ('PENDING', 'CONFIRMED', 'CANCELLED', 'ARCHIVED');
 
 -- CreateEnum
 CREATE TYPE "OrderStatus" AS ENUM ('PENDING', 'PREPARING', 'DELIVERED', 'READY', 'CANCELLED');
 
--- AlterTable
-ALTER TABLE "User" ADD COLUMN     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-ADD COLUMN     "updatedAt" TIMESTAMP(3);
+-- CreateTable
+CREATE TABLE "User" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "number" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3),
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Address" (
+    "id" SERIAL NOT NULL,
+    "addressid" INTEGER NOT NULL,
+    "pincode" INTEGER NOT NULL,
+    "streetRoad" TEXT NOT NULL,
+    "colony" TEXT NOT NULL,
+    "area" TEXT NOT NULL,
+
+    CONSTRAINT "Address_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "Order" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
-    "status" "OrderStatus" NOT NULL,
-    "total" DOUBLE PRECISION NOT NULL,
+    "status" "OrderStatus",
+    "partysize" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3),
+    "reservationid" INTEGER,
+    "type" TEXT NOT NULL,
 
     CONSTRAINT "Order_pkey" PRIMARY KEY ("id")
 );
@@ -27,6 +49,7 @@ CREATE TABLE "MenuItem" (
     "description" TEXT NOT NULL,
     "price" DOUBLE PRECISION NOT NULL,
     "category" TEXT NOT NULL,
+    "categorytype" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3),
 
@@ -36,10 +59,10 @@ CREATE TABLE "MenuItem" (
 -- CreateTable
 CREATE TABLE "OrderItem" (
     "id" SERIAL NOT NULL,
-    "orderId" INTEGER NOT NULL,
-    "menuitemId" INTEGER NOT NULL,
+    "orderid" INTEGER NOT NULL,
     "quantity" INTEGER NOT NULL,
     "price" DOUBLE PRECISION NOT NULL,
+    "menuitem" JSONB[],
 
     CONSTRAINT "OrderItem_pkey" PRIMARY KEY ("id")
 );
@@ -48,13 +71,13 @@ CREATE TABLE "OrderItem" (
 CREATE TABLE "Reservation" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
-    "date" TIMESTAMP(3) NOT NULL,
-    "time" TIMESTAMP(3) NOT NULL,
-    "status" "ReservationStatus" NOT NULL,
+    "date" DATE NOT NULL,
+    "time" TEXT NOT NULL,
+    "partysize" INTEGER NOT NULL,
+    "status" "ReservationStatus",
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3),
     "TableId" INTEGER NOT NULL,
-    "orderId" INTEGER,
 
     CONSTRAINT "Reservation_pkey" PRIMARY KEY ("id")
 );
@@ -62,7 +85,7 @@ CREATE TABLE "Reservation" (
 -- CreateTable
 CREATE TABLE "Table" (
     "id" SERIAL NOT NULL,
-    "number" INTEGER NOT NULL,
+    "tablenumber" INTEGER NOT NULL,
     "capacity" INTEGER NOT NULL,
     "isAvailable" BOOLEAN NOT NULL DEFAULT true,
 
@@ -70,25 +93,31 @@ CREATE TABLE "Table" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Reservation_orderId_key" ON "Reservation"("orderId");
+CREATE UNIQUE INDEX "User_number_key" ON "User"("number");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Table_number_key" ON "Table"("number");
+CREATE UNIQUE INDEX "Order_reservationid_key" ON "Order"("reservationid");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "MenuItem_name_key" ON "MenuItem"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Table_tablenumber_key" ON "Table"("tablenumber");
+
+-- AddForeignKey
+ALTER TABLE "Address" ADD CONSTRAINT "Address_addressid_fkey" FOREIGN KEY ("addressid") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Order" ADD CONSTRAINT "Order_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "OrderItem" ADD CONSTRAINT "OrderItem_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Order" ADD CONSTRAINT "Order_reservationid_fkey" FOREIGN KEY ("reservationid") REFERENCES "Reservation"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "OrderItem" ADD CONSTRAINT "OrderItem_menuitemId_fkey" FOREIGN KEY ("menuitemId") REFERENCES "MenuItem"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "OrderItem" ADD CONSTRAINT "OrderItem_orderid_fkey" FOREIGN KEY ("orderid") REFERENCES "Order"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Reservation" ADD CONSTRAINT "Reservation_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Reservation" ADD CONSTRAINT "Reservation_TableId_fkey" FOREIGN KEY ("TableId") REFERENCES "Table"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Reservation" ADD CONSTRAINT "Reservation_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order"("id") ON DELETE SET NULL ON UPDATE CASCADE;

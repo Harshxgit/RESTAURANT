@@ -6,32 +6,34 @@ export async function GET() {
   try {
     const data = await getMenu();
     if (!data) return Response.json({ error: "menu data not found" });
-    return NextResponse.json(data,{status :200});
+    return NextResponse.json(data, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: "failed to fetch data" },{status:404});
+    return NextResponse.json(
+      { error: "failed to fetch data" },
+      { status: 404 }
+    );
   }
 }
-
 
 export async function POST(req: Request) {
   const { name, price, description, category } = await req.json();
   if (!name || !price || !description || !category)
-    return Response.json({ error: "data not found" });
+    return NextResponse.json({ error: "data not found" }, { status: 404 });
   try {
- 
     const insertdata = await addMenu(name, price, description, category);
-    if (!insertdata) return Response.json({ error: "data not found" });
-    return Response.json(insertdata);
+    if (!insertdata)
+      return NextResponse.json({ error: "data not found" }, { status: 404 });
+    return NextResponse.json(insertdata, { status: 202 });
   } catch (e) {
-    return Response.json({ error: "failed" });
+    console.log(e)
+    return NextResponse.json({ error: "failed" }, { status: 404 });
   }
 }
-
 
 export async function PUT(req: Request) {
   const { name, price, description, id, category } = await req.json();
   if (!name || !price || !description || !category || !id)
-    return Response.json({ error: "data not found" });
+    return NextResponse.json({ error: "data not found" });
   const update = await prisma.menuItem.update({
     where: {
       id: id,
@@ -44,9 +46,8 @@ export async function PUT(req: Request) {
     },
   });
   if (!update) return Response.json({ message: "update failed" });
-  return Response.json({ message: "data updated" });
+  return NextResponse.json({ message: "data updated" });
 }
-
 
 export async function DELETE(req: Request) {
   const { id } = await req.json();
@@ -55,6 +56,6 @@ export async function DELETE(req: Request) {
       id: id,
     },
   });
-  if (!del) return Response.json({ message: "faild to delete menu" });
-  return Response.json({ message: "menu deleted" });
+  if (!del) return NextResponse.json({ message: "faild to delete menu" });
+  return NextResponse.json({ message: "menu deleted" });
 }
