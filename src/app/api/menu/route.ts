@@ -1,14 +1,14 @@
 import { addMenu, getMenu } from "@/app/actions/menu/addMenu";
 import prisma from "@/db";
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
     const data = await getMenu();
     if (!data) return Response.json({ error: "menu data not found" });
-    return Response.json(data);
+    return NextResponse.json(data,{status :200});
   } catch (error) {
-    return Response.json({ error: "failed to fetch data" });
+    return NextResponse.json({ error: "failed to fetch data" },{status:404});
   }
 }
 

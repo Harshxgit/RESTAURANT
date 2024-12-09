@@ -2,18 +2,23 @@
 import { order } from '@/app/actions/order/order'
 import {  useSession } from 'next-auth/react'
 import React, { useState } from 'react'
+import { object } from 'zod'
 
 //get user details from session 
 export default function page() {
   const {data:session} = useSession()
-  const [items , setItems] = useState({})
+  const [items , setItems] = useState([])
   const [price , setPrice] = useState(0)
-  const [type, setType] = useState()
-const partysize = 00
+  const [type, setType] = useState("string")
+  const[partysize , setPartysize] = useState<number>(0)
+  const[ totalmenuquantity , setTotalmenuquantity]= useState(0)
   const onBook =()=>{
-    const sucess = order( session?.user._id ,items, price , type ,items.length , partysize ) 
+    const sucess = order( session?.user._id ,partysize,  price ,items, totalmenuquantity,type ) 
   }
-  const onDrag =({item}:any)=>{
+  const handledragStart = (e)=>{
+    item.setelement(item.id)
+  }
+  const onDrop =({item}:any)=>{
     if(item.name){
       setItems(item.qty++)
       setPrice(price)

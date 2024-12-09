@@ -1,5 +1,6 @@
 "use client";
 import { getMenu } from "@/app/actions/menu/addMenu";
+import { fetchData } from "next-auth/client/_utils";
 import React, { useEffect, useState } from "react";
 import { object, string } from "zod";
 
@@ -20,17 +21,18 @@ interface groupItems {
 export default function MenuItems() {
   const [allmenu, setAllmenu] = useState<Items[]>([]);
   const [getmenu, setGetmenu] = useState<groupItems>();
-  const [selecteditems, setSelecteditems] = useState<Items[]>();
-
-  const setSelecteditem=(items: Items[])=>{
-          setSelecteditem(items)
-  }
-
+  const [selecteditems, setSelecteditems] = useState<Items[]>([]);
+  const [selected, setSelected] = useState<boolean | null>(false);
+  const setSelecteditem = (items: Items[]) => {
+    setSelecteditems(items);
+    setSelected(true);
+  };
+  const fetchdata = async () => {
+    const menu = await getMenu();
+    setAllmenu(menu);
+  };
   useEffect(() => {
-    (async () => {
-      const menu = await getMenu();
-      setAllmenu(menu);
-    })();
+    fetchdata();
 
     const getmenu = allmenu.reduce<groupItems>((acc, curr) => {
       if (!acc[curr.category]) {
@@ -47,14 +49,16 @@ export default function MenuItems() {
       <div>
         {Object.entries(getmenu ?? {}).map(([itemType, items]) => (
           <>
-            <div onClick={()=>setSelecteditem(items)}>{itemType}</div>
-            <div>
-              {items.map((item) => (
+            <div key={itemType} onClick={() => setSelecteditem(items)}>
+              {itemType}
+            </div>
+
+            {selected &&
+              selecteditems.map((item) => (
                 <div>
                   <div>{item.name}</div>
                 </div>
               ))}
-            </div>
           </>
         ))}
       </div>
