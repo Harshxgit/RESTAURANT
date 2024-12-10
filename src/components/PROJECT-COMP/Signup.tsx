@@ -50,6 +50,7 @@ export default function Signup() {
 
   //send otp server action function
   const sendotp = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
     const existuser = await findUser(number);
 
     //check user exist or not
@@ -57,25 +58,21 @@ export default function Signup() {
       setMessage("user existed");
       router.push("/signup");
     }
-
     await sendOTP(number, token);
     setMessage("!OTP Sent");
-    e.preventDefault();
   };
-  const signuplogin = async() => {
-    console.log("hii lsdjfldksjfdslfdsf")
-    const response = await signIn("credentials",{
-      mode :"signup",
-      number:number,
-      firstname :firstname,
-      lastname : lastname,
-      password : password,
-    })
-    if(response?.ok){
-        router.push("/dinein")
-    }else{
-      setMessage("signup Sucessfully ")
-    }
+  const signuplogin = async () => {
+  
+    const response = await signIn("credentials", {
+      mode: "signup",
+      number: number,
+      firstname: firstname,
+      lastname: lastname,
+      password: password,
+      redirect: true,
+    });
+
+    if (response?.ok) setMessage("sign-up sucessfully");
   };
 
   return (
@@ -84,89 +81,87 @@ export default function Signup() {
         <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
           Welcome to Our Restaurant
         </h2>
-        <form className="my-8" >
-          <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
-            <LabelInputContainer>
-              <Label htmlFor="firstname">First name</Label>
-              <Input
-                id="firstname"
-                placeholder="first-name"
-                type="text"
-                name="firstname"
-                required
-                onChange={(e) => setFirstname(e.target.value)}
-              />
-            </LabelInputContainer>
-            <LabelInputContainer>
-              <Label htmlFor="lastname">Last name</Label>
-              <Input
-                id="lastname"
-                placeholder="last-name"
-                type="text"
-                name="lastname"
-                required
-                onChange={(e)=>setLastname(e.target.value)} />
-            </LabelInputContainer>
-          </div>
-          <LabelInputContainer className="mb-4">
-            <Label htmlFor="text">Enter your Phone number</Label>
-            <div className="flex space-x-6">
-              <Input
-                id="number"
-                placeholder="9341******"
-                type="text"
-                onChange={(e) => setNumber(e.target.value)}
-                name="number"
-                required
-              />
-              <button
-                className="border-2 rounded-xl bg-green-600 px-1 relative"
-                onClick={sendotp}
-              >
-                Send Otp
-              </button>
-            </div>
-            <li className="text-green-500 list-none">{message}</li>
-          </LabelInputContainer>
-          <LabelInputContainer className="mb-4">
-            <Label htmlFor="number">Enter otp</Label>
+
+        <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
+          <LabelInputContainer>
+            <Label htmlFor="firstname">First name</Label>
             <Input
-              id="otp"
-              placeholder="••••••••"
-              type="password"
-              onChange={(e) => setotp(e.target.value)}
+              id="firstname"
+              placeholder="first-name"
+              type="text"
+              name="firstname"
+              required
+              onChange={(e) => setFirstname(e.target.value)}
+            />
+          </LabelInputContainer>
+          <LabelInputContainer>
+            <Label htmlFor="lastname">Last name</Label>
+            <Input
+              id="lastname"
+              placeholder="last-name"
+              type="text"
+              name="lastname"
+              required
+              onChange={(e) => setLastname(e.target.value)}
+            />
+          </LabelInputContainer>
+        </div>
+        <LabelInputContainer className="mb-4">
+          <Label htmlFor="text">Enter your Phone number</Label>
+          <div className="flex space-x-6">
+            <Input
+              id="number"
+              placeholder="9341******"
+              type="text"
+              onChange={(e) => setNumber(e.target.value)}
+              name="number"
               required
             />
-          </LabelInputContainer>
-          <LabelInputContainer className="mb-8">
-            <Label htmlFor="password">Your password</Label>
-            <Input
-              id="password"
-              placeholder="••••••••"
-              type="password"
-              name="password"
-              onChange={(e)=>setPassword(e.target.value)}
-            />
-          </LabelInputContainer>
-
-          <button
-            className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-            
-            onClick={signuplogin}
-            
-          >
-            {pending ? "Signing up" : "Sign up"} &rarr;
-            <BottomGradient />
-          </button>
-          <Turnstile
-            className="my-4 mx-1"
-            onSuccess={(token) => {
-              setToken(token);
-            }}
-            siteKey="0x4AAAAAAAwsPtO1RkLb-vFz"
+            <button
+              className="border-2 rounded-xl bg-green-600 px-1 relative"
+              onClick={sendotp}
+            >
+              Send Otp
+            </button>
+          </div>
+          <li className="text-green-500 list-none">{message}</li>
+        </LabelInputContainer>
+        <LabelInputContainer className="mb-4">
+          <Label htmlFor="number">Enter otp</Label>
+          <Input
+            id="otp"
+            placeholder="••••••••"
+            type="password"
+            onChange={(e) => setotp(e.target.value)}
+            required
           />
-          <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
-        </form>
+        </LabelInputContainer>
+        <LabelInputContainer className="mb-8">
+          <Label htmlFor="password">Your password</Label>
+          <Input
+            id="password"
+            placeholder="••••••••"
+            type="password"
+            name="password"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </LabelInputContainer>
+
+        <button
+          className="bg-gradient-to-br relative group/btn from-black dark:from-zinc-900 dark:to-zinc-900 to-neutral-600 block dark:bg-zinc-800 w-full text-white rounded-md h-10 font-medium shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+          onClick={signuplogin}
+        >
+          {pending ? "Signing up" : "Sign up"} &rarr;
+          <BottomGradient />
+        </button>
+        <Turnstile
+          className="my-4 mx-1"
+          onSuccess={(token) => {
+            setToken(token);
+          }}
+          siteKey="0x4AAAAAAAwsPtO1RkLb-vFz"
+        />
+        <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
       </>
     </div>
   );

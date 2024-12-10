@@ -53,7 +53,7 @@ export default function Signin() {
     //check user exist or not
     const existuser = await findUser(number);
     if (!existuser) return {"message":"number is wrong"}
-    console.log("otp sent");
+
     await sendOTP(number, token);
     setMessage("!OTP Sent");
     setCurrentStep("otp");
@@ -68,7 +68,7 @@ export default function Signin() {
         phone: number,
       });
 
-      console.log(check);
+   
     };
 
     sucess(number);

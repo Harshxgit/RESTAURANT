@@ -7,7 +7,6 @@ import { sendOTP, verifyOtp } from "@/app/actions/otp";
 import { verify } from "crypto";
 import { findUser, setUser } from "@/app/actions/user/userDetails";
 
-
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -41,25 +40,37 @@ export const authOptions: NextAuthOptions = {
             }
 
             if (step === "password") {
-              console.log("control reach here");
-              console.log(user.password);
+             
               const iscorrectpassword = await bcrypt.compare(
                 password,
                 user.password
               );
-              if (iscorrectpassword) return user;
-              else throw new Error("password not matched");
+              if (!iscorrectpassword)throw new Error("password not matched");
+              return user
             }
-            if (mode === "signup") {
-              console.log("reaches here")
-              //first check if user existed
-              const user = await findUser(number);
-              if (user) throw new Error("User Already existed!");
-              console.log("failed to find")
-              const createUser = await setUser(number, password, firstname, lastname);
-              if(createUser) return user
-              else throw new Error("user not signed-Up")
+          }
+          else if (mode === "signup") {
+            //first check if user existed
+          
+            const user = await findUser(number);
+            
+            if (user) {
+              return user;
+            } else{
+           
+              const createUser = await setUser(
+                firstname,
+                lastname,
+                number,
+                password
+              );
+              if (createUser) {
+                const newuser = await findUser(number);
+                return newuser;
+              }
+             
             }
+            throw new Error("user not signed-Up");
           }
         } catch (err: any) {
           throw new Error(err);
@@ -83,7 +94,7 @@ export const authOptions: NextAuthOptions = {
         session.user.number = token.number;
       }
       return session;
-    },
+    }
   },
   session: {
     strategy: "jwt",
@@ -91,6 +102,5 @@ export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: "/sign-in",
-
   },
 };

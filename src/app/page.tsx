@@ -10,7 +10,7 @@ export default function Home() {
    </h1>
         <button onClick={()=>signIn()} > Signin</button>
         <button onClick={()=>signOut()}className="mx-1" > SignOut</button>
-        <>{session?.user.name}</>
+        <>{session?.user.name} </>
    </>
   );
 }
