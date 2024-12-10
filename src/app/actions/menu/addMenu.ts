@@ -1,4 +1,5 @@
-import prisma from "@/db";
+" use server"
+import prisma from "@/db/index";
 import { error } from "console";
 import { Manifest } from "next/dist/lib/metadata/types/manifest-types";
 

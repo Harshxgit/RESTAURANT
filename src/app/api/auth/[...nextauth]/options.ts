@@ -1,10 +1,9 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
-import { error } from "console";
-import prisma from "@/db";
+
 import { sendOTP, verifyOtp } from "@/app/actions/otp";
-import { verify } from "crypto";
+
 import { findUser, setUser } from "@/app/actions/user/userDetails";
 
 export const authOptions: NextAuthOptions = {
