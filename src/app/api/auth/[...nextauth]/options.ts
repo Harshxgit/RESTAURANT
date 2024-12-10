@@ -1,3 +1,4 @@
+
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
@@ -6,7 +7,7 @@ import { sendOTP, verifyOtp } from "@/app/actions/otp";
 
 import { findUser, setUser } from "@/app/actions/user/userDetails";
 
-export const authOptions: NextAuthOptions = {
+export  const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       id: "credentials",

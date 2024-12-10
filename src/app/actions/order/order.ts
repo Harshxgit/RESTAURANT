@@ -1,7 +1,7 @@
 " use server"
 import { string } from "zod";
 import { json } from "stream/consumers";
-import prisma from "@/db/index";
+import {prisma} from "@/db/index";
 
 export async function order(
   userid: number,

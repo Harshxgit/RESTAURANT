@@ -1,5 +1,5 @@
-" use server"
-import prisma from "@/db/index";
+'use server'
+import {prisma} from "@/db/index";
 import { error } from "console";
 import { Manifest } from "next/dist/lib/metadata/types/manifest-types";
 
@@ -43,8 +43,7 @@ export async function getMenu(): Promise<
     updatedAt: Date | null;
   }[]
 > {
-  const menuData = await prisma.menuItem.findMany({});
-  return menuData;
+  return await prisma.menuItem.findMany({});
 }
 
 export async function updateMenu(

@@ -1,5 +1,5 @@
 import { addMenu, getMenu } from "@/app/actions/menu/addMenu";
-import prisma from "@/db";
+import {prisma} from "@/db";
 import { NextResponse } from "next/server";
 
 export async function GET() {

@@ -1,3 +1,4 @@
+"use server"
 import { setUser } from "@/app/actions/user/userDetails"
 import { NextResponse } from "next/server"
 

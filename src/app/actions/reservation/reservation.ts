@@ -1,5 +1,5 @@
 " use server"
-import prisma from "@/db/index";
+import {prisma} from "@/db/index";
 import { getIO } from "../../../../server/socket";
 import { order } from "../order/order";
 // import cron from "node-cron";

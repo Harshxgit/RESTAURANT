@@ -1,8 +1,8 @@
-"use client";
+'use client'
 import { getMenu } from "@/app/actions/menu/addMenu";
-import { fetchData } from "next-auth/client/_utils";
+
 import React, { useEffect, useState } from "react";
-import { object, string } from "zod";
+
 
 interface Items {
   id: number;
@@ -28,8 +28,7 @@ export default function MenuItems() {
     setSelected(true);
   };
   const fetchdata = async () => {
-    const menu = await getMenu();
-    setAllmenu(menu);
+    getMenu().then(setAllmenu)
   };
   useEffect(() => {
     fetchdata();
